@@ -20,10 +20,10 @@ namespace Console_Warrior
                     return " ";
                     
                 case Objects.Player: 
-                    return "P";
+                    return "웃";
 
                 case Objects.Monster:
-                    return "M";
+                    return "💀";
 
                 case Objects.Wall:
                     return "☖";
@@ -52,8 +52,15 @@ namespace Console_Warrior
                 
                 for (int x = 0; x < mapWidth; x++)
                 {
+                    if (y == playerY && x == playerY)
+                    {
+                        Console.Write(MapMethods.ToSymbol(mapArray[y, x]));
+                    }
+                    else
+                    {
+                        Console.Write($"{MapMethods.ToSymbol(mapArray[y, x])} ");
+                    }
                     
-                    Console.Write($"{MapMethods.ToSymbol(mapArray[y, x])} ");
                                                                          
                 }
 

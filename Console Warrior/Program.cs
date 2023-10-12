@@ -25,40 +25,59 @@
 
             while (isRunning)
             {
+
                 // Reads the players key input and clears the console so that the character doesnt get a "tail".
 
                 ConsoleKeyInfo keyPressed = Console.ReadKey();
                 Console.Clear();
 
-                // Reads the player input and changes the positional coordinates accordingly.
+                // Reads the player input and changes the positional coordinates accordingly,
+                // but only if the proposed coordinate change is within the buffer size of the console.
+
                 if (keyPressed.Key == ConsoleKey.W)
                 {
-                    playerPositionY--;
+                    if(playerPositionY > 0)
+                    {
+                        playerPositionY--;
+                    }                   
                 }
 
                 else if (keyPressed.Key == ConsoleKey.A)
                 {
-                    playerPositionX--;                  
+                    if(playerPositionX > 0)
+                    {
+                        playerPositionX--;
+                    }                                    
                 }        
 
                 else if (keyPressed.Key == ConsoleKey.S)
                 {
-                    playerPositionY++;
+                    if(playerPositionY < Console.BufferHeight-1)
+                    {
+                        playerPositionY++;
+                    }                    
                 }
 
                 else if (keyPressed.Key == ConsoleKey.D)
                 {
-                    playerPositionX++;                  
+
+                    if(playerPositionX < Console.BufferWidth-1)
+                    {
+                        playerPositionX++;
+                    }                                   
                 }
+
                 else 
                 {                  
                 }
 
                 // Prints the player character in the updated location on the console.
-
+                          
                 Console.SetCursorPosition(playerPositionX, playerPositionY);
                 Console.Write(playerChar);
                 
+              
+
 
 
             }

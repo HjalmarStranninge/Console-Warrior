@@ -17,14 +17,8 @@
         {
 
             // Setting text code to UTF8.
-
+            Console.CursorVisible = false;
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-            // Creating variables for the players position on the X and Y axis and initializing their values to 0,
-            
-
-            int playerPositionX = 0;
-            int playerPositionY = 0;
 
             // Using the ToSymbol() method to create printable variables for each object I need.
 
@@ -35,58 +29,51 @@
 
             // Creating 2 int variables for storing the map size, and using them in a 2d array that will be the game map.
                     
-            int mapHeight = 30;
+            int mapHeight = 25;
             int mapWidth = 100;
 
-            Objects[,] map = new Objects [mapHeight, mapWidth];
+            // Creating variables for the players position on the X and Y axis and initializing their values to 0,
 
-            // Iterating through the array and assigns the outmost layer the 'Wall'-enum.
+            int playerPositionY = mapHeight / 2;
+            int playerPositionX = mapWidth / 2;
 
-            for (int y = 0; y < mapHeight; y++)
-            {
-                map[y, 0] = Objects.Wall;
-            }
-
-            for (int y = 0; y < mapHeight; y++)
-            {
-                map[y, mapWidth-1] = Objects.Wall;
-            }
-
-            for (int x = 0; x < mapWidth; x++)
-            {
-                map[0, x] = Objects.Wall;
-            }
-
-            for (int x = 0; x < mapWidth; x++)
-            {
-                map[mapHeight-1, x] = Objects.Wall;
-            }
-
-            // Using the PrintMap() method to print the map onto the console.
-
-            MapMethods.PrintMap(map);
+            // Bool for controlling the gameloop.
 
             bool isRunning = true;
 
-            // Initial printing of the player character to the console.
+            Objects[,] map = new Objects [mapHeight, mapWidth];
 
-            //Console.SetCursorPosition(playerPositionX, playerPositionY);
-            //Console.Write(playerChar);
+            // Iterating through the array and assigning enum-objects to different places in the array.
 
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    if(y == 0 || y == mapHeight-1 || x == 0 || x == mapWidth - 1)
+                    {
+                        map[y, x] = Objects.Wall;
+                    }
+                    else if (y == playerPositionY && x == playerPositionX)
+                    {
+                        map[y, x] = Objects.Player;
+                    }                  
+                }
+            }
+            
             while (isRunning)
             {
+                
+                MapMethods.PrintMap(map, playerPositionY, playerPositionX);
 
-                // Reads the players key input and clears the console so that the character doesnt get a "tail".
+                // Reads the players key input and stores it in a variable.
 
-                ConsoleKeyInfo keyPressed = Console.ReadKey();
-                Console.Clear();
+                ConsoleKeyInfo keyPressed = Console.ReadKey(intercept:true);
 
                 // Reads the player input and changes the positional coordinates accordingly,
-                // but only if the proposed coordinate change is within the buffer size of the console.
-
+                // but only if the proposed coordinate change is within the outer walls of the map.
                 if (keyPressed.Key == ConsoleKey.W)
                 {
-                    if(playerPositionY > 0)
+                    if(playerPositionY > 1)
                     {
                         playerPositionY--;
                     }                   
@@ -94,7 +81,7 @@
 
                 else if (keyPressed.Key == ConsoleKey.A)
                 {
-                    if(playerPositionX > 0)
+                    if(playerPositionX > 1)
                     {
                         playerPositionX--;
                     }                                    
@@ -102,7 +89,7 @@
 
                 else if (keyPressed.Key == ConsoleKey.S)
                 {
-                    if(playerPositionY < Console.BufferHeight-1)
+                    if(playerPositionY < mapHeight-2)
                     {
                         playerPositionY++;
                     }                    
@@ -111,7 +98,7 @@
                 else if (keyPressed.Key == ConsoleKey.D)
                 {
 
-                    if(playerPositionX < Console.BufferWidth-1)
+                    if(playerPositionX < mapWidth-2)
                     {
                         playerPositionX++;
                     }                                   
@@ -120,16 +107,6 @@
                 else 
                 {                  
                 }
-
-                // Prints the player character in the updated location on the console.
-                          
-                Console.SetCursorPosition(playerPositionX, playerPositionY);
-                Console.Write(playerChar);
-                
-              
-
-
-
             }
         }
       

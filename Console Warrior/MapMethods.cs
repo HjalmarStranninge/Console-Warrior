@@ -33,20 +33,33 @@ namespace Console_Warrior
             }
         }
 
-        internal static void PrintMap(Objects[,] mapArray) 
+        // Method for printing the map. Resets the cursor position to overwrite the old map.
+        internal static void PrintMap(Objects[,] mapArray, int playerY, int playerX) 
         {
+            Console.SetCursorPosition(0, 0);
+
+            int oldPositionY = playerY;
+            int oldPositionX = playerX;
 
             int mapHeight = mapArray.GetLength(0);
             int mapWidth = mapArray.GetLength(1);
 
-            for (int i = 0; i < mapHeight; i++)
+            mapArray[playerY, playerX] = Objects.Player;
+            
+
+            for (int y = 0; y < mapHeight; y++)
             {
-                for (int j = 0; j < mapWidth; j++)
-                {
-                    Console.Write(MapMethods.ToSymbol(mapArray[i, j]));
+                
+
+                for (int x = 0; x < mapWidth; x++)
+                {                
+                    Console.Write(MapMethods.ToSymbol(mapArray[y, x]));                                    
                 }
+
                 Console.WriteLine();
             }
+
+            mapArray[oldPositionY, oldPositionX] = Objects.None;
         }
     }
 }

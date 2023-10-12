@@ -1,7 +1,7 @@
 ﻿namespace Console_Warrior
 {
 
-    // Creating an enum for handling the different objects that are used in the game.
+    // Creating an enum for handling the different objects that will be used in the game.
     enum Objects
     {
         None,
@@ -16,7 +16,7 @@
         static void Main(string[] args)
         {
 
-            // Setting text code to UTF8.
+            // Setting text code to ASCII.
             Console.CursorVisible = false;
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -29,8 +29,8 @@
 
             // Creating 2 int variables for storing the map size, and using them in a 2d array that will be the game map.
                     
-            int mapHeight = 25;
-            int mapWidth = 100;
+            int mapHeight = 29;
+            int mapWidth = 60;
 
             // Creating variables for the players position on the X and Y axis and initializing their values to 0,
 
@@ -40,6 +40,8 @@
             // Bool for controlling the gameloop.
 
             bool isRunning = true;
+
+            // Creating 2D array which will be used for printing the map.
 
             Objects[,] map = new Objects [mapHeight, mapWidth];
 
@@ -65,12 +67,13 @@
                 
                 MapMethods.PrintMap(map, playerPositionY, playerPositionX);
 
-                // Reads the players key input and stores it in a variable.
+                // Reads the players key input and stores it in a variable. Doesnt print input to the console.
 
                 ConsoleKeyInfo keyPressed = Console.ReadKey(intercept:true);
 
                 // Reads the player input and changes the positional coordinates accordingly,
                 // but only if the proposed coordinate change is within the outer walls of the map.
+
                 if (keyPressed.Key == ConsoleKey.W)
                 {
                     if(playerPositionY > 1)

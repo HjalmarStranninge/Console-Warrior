@@ -12,24 +12,24 @@ namespace Console_Warrior
     internal static class MapMethods
     {
         // A method for converting the enums into symbols.
-        internal static char ToSymbol(Objects item)
+        internal static string ToSymbol(Objects item)
         {
             switch (item)
             {
                 case Objects.None:
-                    return ' ';
+                    return " ";
                     
                 case Objects.Player: 
-                    return 'P';
+                    return "P";
 
                 case Objects.Monster:
-                    return 'M';
+                    return "M";
 
                 case Objects.Wall:
-                    return '#';
+                    return "☖";
 
                 default:
-                    return ' ';
+                    return " ";
             }
         }
 
@@ -50,13 +50,15 @@ namespace Console_Warrior
             for (int y = 0; y < mapHeight; y++)
             {
                 
-
                 for (int x = 0; x < mapWidth; x++)
-                {                
-                    Console.Write(MapMethods.ToSymbol(mapArray[y, x]));                                    
+                {
+                    
+                    Console.Write($"{MapMethods.ToSymbol(mapArray[y, x])} ");
+                                                                         
                 }
 
                 Console.WriteLine();
+
             }
 
             mapArray[oldPositionY, oldPositionX] = Objects.None;

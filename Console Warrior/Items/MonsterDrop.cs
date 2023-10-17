@@ -8,5 +8,9 @@ namespace Console_Warrior.Items
 {
     internal class MonsterDrop : Item
     {
+        public override void ItemInfo<T>(T item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -8,15 +8,17 @@ namespace Console_Warrior.Items
 {
     internal class Weapon : Item
     {
-        protected int _attack;
+        protected int _damage;
         protected int _level;
 
     
 
 
-        public override void ItemInfo()
+        public override void ItemInfo<Weapon>(Weapon weapon)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"{_name}(Level {_level})" +
+                $"\nDamage: {_damage}" +
+                $"\n{_description}");
         }
     }
 }

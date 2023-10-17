@@ -1,4 +1,6 @@
 ﻿using Console_Warrior.Items;
+using Console_Warrior.Characters;
+using Console_Warrior.NewFolder;
 
 namespace Console_Warrior
 {
@@ -41,24 +43,87 @@ namespace Console_Warrior
                     // Creating a new 'Hero' and using my 'StoryText' - methods to print the story intro.
                     case "1":
                  
+                        // Creating instances of the classes needed in the initial creation of the map.
                         var player = new Hero();
-                        StoryText.Intro();
+                        var wall = new Stone();
+                        var empty = new Empty_Space();
+
+                        //StoryText.Intro();
                         
                         player.SetName(Console.ReadLine());
 
-                        StoryText.Intro(player.Name);                       
+                        //StoryText.Intro(player.Name);
+
+                        // Creating 2 int variables for storing the map size, and using them in a 2d array that will become the game map.
+
+                        int mapHeight = 29;
+                        int mapWidth = 60;
+
+                        // Creating variables for the players position on the X and Y axis and initializing their values to 0,
+
+                        int playerPositionY = mapHeight / 2;
+                        int playerPositionX = mapWidth / 2;
+
+                        Console.Clear();
+
+                        // Creating an IMapPrintAble-array which will be used for printing the map.
+
+                        IMapPrintAble[,] map = new IMapPrintAble [mapHeight, mapWidth];
+
+                        // Iterating through the array and assigning IMapPrintAble-objects to different places in the array.
+
+                        for (int y = 0; y < mapHeight; y++)
+                        {
+                            for (int x = 0; x < mapWidth; x++)
+                            {
+                                if (y == 0 || y == mapHeight - 1 || x == 0 || x == mapWidth - 1)
+                                {
+                                    map[y, x] = wall;
+                                }
+                                else if (y == playerPositionY && x == playerPositionX)
+                                {
+                                    map[y, x] = player;
+                                }
+                                else
+                                {
+                                    map[y, x] = empty;
+                                }
+                            }
+                        }
+
+                        // Bool for running the gamemap in the console.
+
+                        bool runMap = true;
+
+                        while (runMap)
+                        {
+
+                            // Using static methods to run print the map and move the player around it.
+
+                            Console.CursorVisible = false;
+                            MapMethods.PrintMap(map, playerPositionY, playerPositionX);
+                            
+                            MapMethods.HandlePlayerMovement(map, ref playerPositionY, ref playerPositionX);
+                        }
+
                         break;
+
+                    // Prints instructions to the console.
 
                     case "2":
 
                         StoryText.Instructions();
                         break;
 
+                    // Ends the game loop.
+
                     case "3":
 
                         Console.Clear();
                         isRunning = false;
                         break;
+
+                    // Handles invalid input.
 
                     default:
 
@@ -81,97 +146,8 @@ namespace Console_Warrior
 
 
 
-            //// Using the ToSymbol() method to create printable variables for each object I need.
-
-            //var playerChar = MapMethods.ToSymbol(Objects.Player);
-            //var monster = MapMethods.ToSymbol(Objects.Monster);
-            //var openSpace = MapMethods.ToSymbol(Objects.None);
-            //var wall = MapMethods.ToSymbol(Objects.Wall);
-
-            //// Creating 2 int variables for storing the map size, and using them in a 2d array that will be the game map.
-                    
-            //int mapHeight = 29;
-            //int mapWidth = 60;
-
-            //// Creating variables for the players position on the X and Y axis and initializing their values to 0,
-
-            //int playerPositionY = mapHeight / 2;
-            //int playerPositionX = mapWidth / 2;
-
-            //// Bool for controlling the gameloop.
-
-            //bool isRunning = true;
-
-            //// Creating 2D array which will be used for printing the map.
-
-            //Objects[,] map = new Objects [mapHeight, mapWidth];
-
-            //// Iterating through the array and assigning enum-objects to different places in the array.
-
-            //for (int y = 0; y < mapHeight; y++)
-            //{
-            //    for (int x = 0; x < mapWidth; x++)
-            //    {
-            //        if(y == 0 || y == mapHeight-1 || x == 0 || x == mapWidth - 1)
-            //        {
-            //            map[y, x] = Objects.Wall;
-            //        }
-            //        else if (y == playerPositionY && x == playerPositionX)
-            //        {
-            //            map[y, x] = Objects.Player;
-            //        }                  
-            //    }
-            //}
+     
             
-            //while (isRunning)
-            //{
-                
-            //    MapMethods.PrintMap(map, playerPositionY, playerPositionX);
-
-            //    // Reads the players key input and stores it in a variable. Doesnt print input to the console.
-
-            //    ConsoleKeyInfo keyPressed = Console.ReadKey(intercept:true);
-
-            //    // Reads the player input and changes the positional coordinates accordingly,
-            //    // but only if the proposed coordinate change is within the outer walls of the map.
-
-            //    if (keyPressed.Key == ConsoleKey.W)
-            //    {
-            //        if(playerPositionY > 1)
-            //        {
-            //            playerPositionY--;
-            //        }                   
-            //    }
-
-            //    else if (keyPressed.Key == ConsoleKey.A)
-            //    {
-            //        if(playerPositionX > 1)
-            //        {
-            //            playerPositionX--;
-            //        }                                    
-            //    }        
-
-            //    else if (keyPressed.Key == ConsoleKey.S)
-            //    {
-            //        if(playerPositionY < mapHeight-2)
-            //        {
-            //            playerPositionY++;
-            //        }                    
-            //    }
-
-            //    else if (keyPressed.Key == ConsoleKey.D)
-            //    {
-
-            //        if(playerPositionX < mapWidth-2)
-            //        {
-            //            playerPositionX++;
-            //        }                                   
-            //    }
-
-            //    else 
-            //    {                  
-            //    }
-            //}
 
         }
       

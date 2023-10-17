@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Console_Warrior
 {
-    internal class Monster : Character
+    internal class Empty_Space : IMapPrintAble
     {
-        protected int _xpDrop;
-        
+        public string GetSymbol()
+        {
+            return " ";
+        }
     }
 }

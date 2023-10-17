@@ -11,7 +11,7 @@ namespace Console_Warrior.Items
         protected string _name;
         protected string _description;
 
-        public abstract void ItemInfo();
+        public abstract void ItemInfo<T>(T item);
 
     }
 }

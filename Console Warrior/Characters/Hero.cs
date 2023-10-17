@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Console_Warrior
+namespace Console_Warrior.NewFolder
 {
-    internal class Hero : Character
+    internal class Hero : Character, IMapPrintAble
     {
         private string _name;
         public string Name { get { return _name; } }
         private int _xp = 0;
         public Hero()
         {
-            
+
             _hp = 100;
             _attack = 10;
             _defence = 0;
@@ -36,7 +36,7 @@ namespace Console_Warrior
 
         public void SetName(string name)
         {
-           _name = name;
+            _name = name;
         }
 
         public void LevelUp()
@@ -44,6 +44,9 @@ namespace Console_Warrior
             _level++;
         }
 
-
+        string IMapPrintAble.GetSymbol()
+        {
+            return "웃";
+        }
     }
 }

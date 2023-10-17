@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Console_Warrior
+namespace Console_Warrior.NewFolder
 {
     internal abstract class Character
     {
@@ -13,7 +13,7 @@ namespace Console_Warrior
         protected int _attack;
         protected int _defence;
 
-        
+
 
         public void Attack(Character attacking, Character defending)
         {
@@ -21,10 +21,10 @@ namespace Console_Warrior
             defending._hp = defending._hp - attackPower;
         }
 
-        
-        
+
+
 
     }
-    
+
 
 }

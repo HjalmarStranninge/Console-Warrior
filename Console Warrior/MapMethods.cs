@@ -70,5 +70,17 @@ namespace Console_Warrior
 
             mapArray[oldPositionY, oldPositionX] = Objects.None;
         }
+
+        // Method for printing text slower, letter by letter.
+        internal static void SlowText(string text)
+        {
+            foreach (char c in text)
+            {
+                Console.Write(c);
+                Thread.Sleep(50);
+            }
+
+            Console.WriteLine();
+        }
     }
 }

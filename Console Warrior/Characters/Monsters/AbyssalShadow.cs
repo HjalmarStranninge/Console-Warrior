@@ -15,7 +15,7 @@ namespace Console_Warrior.Characters.Monsters
             _hp = 25;
             _defence = 10;
             _xpDrop = 20;
-            _description = $"A nightmarish entity emerges from the inky blackness of the labyrinth's depth, " +
+            _description = $"A nightmarish entity emerges from the inky blackness of the labyrinth's depths, " +
                 $"\nits form shrouded in the deepest darkness. It stares at you with blood-red eyes.";
 
         }

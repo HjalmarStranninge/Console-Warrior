@@ -124,5 +124,20 @@ namespace Console_Warrior
                 
             }
         }
+
+        public static bool IsPlayerOnMonster(int playerPositionY, int playerPositionX, List<Tuple<int, int>> monsterPositions)
+        {
+            foreach(var monsterPos in monsterPositions)
+            {
+                int monsterY = monsterPos.Item1;
+                int monsterX = monsterPos.Item2;
+                if(playerPositionY == monsterY &&  monsterX == playerPositionX)
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
     }
 }

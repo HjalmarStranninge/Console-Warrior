@@ -114,14 +114,19 @@ namespace Console_Warrior
 
                         // Hiding the cursor and printing the map to the console in a while-loop.
 
-                        Console.CursorVisible = false;
+                        
                         bool runGame = true;
                         MapMethods.PrintMap(map);
 
                         while (runGame)
                         {
+                            Console.CursorVisible = false;
                             MapMethods.HandlePlayerMovement(map, ref playerPositionY, ref playerPositionX);
-                            MapMethods.UpdateMap(map, oldMap);                   
+                            MapMethods.UpdateMap(map, oldMap);
+                            if (MapMethods.IsPlayerOnMonster( playerPositionY, playerPositionX, monsterPositions))
+                            {
+                                CombatMethods.RunCombat(player, new Abyssal_Shadow()); 
+                            }
                         }
                         break;
 

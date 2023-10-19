@@ -46,7 +46,7 @@ namespace Console_Warrior.NewFolder
 
         string IMapPrintAble.GetSymbol()
         {
-            return "웃";
+            return "P";
         }
     }
 }

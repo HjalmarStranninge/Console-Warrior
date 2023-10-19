@@ -1,19 +1,12 @@
 ﻿using Console_Warrior.Items;
 using Console_Warrior.Characters;
 using Console_Warrior.NewFolder;
+using Console_Warrior.MapObjects;
+using Console_Warrior.Characters.Monsters;
+using System.Collections.Generic;
 
 namespace Console_Warrior
 {
-
-    // Creating an enum for handling the different objects that will be used in the game.
-    enum Objects
-    {
-        None,
-        Player,
-        Wall,
-        Monster,
-    }
-
     internal class Program
     {
 
@@ -24,9 +17,10 @@ namespace Console_Warrior
 
 
             // Printing a simple menu using a switch case.
-            bool isRunning = true;
-            while(isRunning)
+            bool runMenu = true;
+            while(runMenu)
             {
+
                 Console.Clear();
                 Console.WriteLine("--- CONSOLE WARRIOR: Realm of the Abyssal Labyrinth ---");
                 Console.WriteLine();
@@ -40,31 +34,46 @@ namespace Console_Warrior
                 switch (userInput)
                 {
 
-                    // Creating a new 'Hero' and using my 'StoryText' - methods to print the story intro.
+                    
                     case "1":
-                 
-                        // Creating instances of the classes needed in the initial creation of the map.
+
+                        Console.Clear();
+
+                        // Creating a new 'Hero' and using my 'StoryText' - methods to print the story intro.
+
                         var player = new Hero();
-                        var wall = new Stone();
-                        var empty = new Empty_Space();
-
                         //StoryText.Intro();
-                        
-                        player.SetName(Console.ReadLine());
 
+                        player.SetName(Console.ReadLine());
                         //StoryText.Intro(player.Name);
 
                         // Creating 2 int variables for storing the map size, and using them in a 2d array that will become the game map.
 
                         int mapHeight = 29;
-                        int mapWidth = 60;
+                        int mapWidth = 120;
 
                         // Creating variables for the players position on the X and Y axis and initializing their values to 0,
 
                         int playerPositionY = mapHeight / 2;
                         int playerPositionX = mapWidth / 2;
 
-                        Console.Clear();
+                        // Creating a Tuple list for storing the positions of the monsters, and generating 5 unique positions.
+
+                        var monsterPositions = new List<Tuple<int, int>>();
+                        var random = new Random();
+
+                        while(monsterPositions.Count < 5)
+                        {
+                            int randomY = random.Next(1, mapHeight - 1);
+                            int randomX = random.Next(1, mapWidth - 1);
+                            var position = new Tuple<int, int>(randomY, randomX);
+
+                            if (!monsterPositions.Contains(position)&&
+                                (position.Item1 != playerPositionY || position.Item2 != playerPositionX))
+                            {
+                                monsterPositions.Add(position);
+                            }        
+                        }
 
                         // Creating an IMapPrintAble-array which will be used for printing the map.
 
@@ -78,7 +87,7 @@ namespace Console_Warrior
                             {
                                 if (y == 0 || y == mapHeight - 1 || x == 0 || x == mapWidth - 1)
                                 {
-                                    map[y, x] = wall;
+                                    map[y, x] = new Stone();
                                 }
                                 else if (y == playerPositionY && x == playerPositionX)
                                 {
@@ -86,27 +95,37 @@ namespace Console_Warrior
                                 }
                                 else
                                 {
-                                    map[y, x] = empty;
+                                    Tuple<int,int> currentPos = new Tuple <int,int>(y, x);
+                                    if (monsterPositions.Contains(currentPos))
+                                    {
+                                        map[y, x] = new Abyssal_Shadow();
+                                    }
+                                    else
+                                    {
+                                        map[y, x] = new Empty_Space();
+                                    }                                                                                                                                             
                                 }
                             }
                         }
 
-                        // Bool for running the gamemap in the console.
+                        // Creating a copy of the map which will be used to update the map after each movement.
 
-                        bool runMap = true;
+                        IMapPrintAble[,] oldMap = (IMapPrintAble[,]) map.Clone();
 
-                        while (runMap)
+                        // Hiding the cursor and printing the map to the console in a while-loop.
+
+                        Console.CursorVisible = false;
+                        bool runGame = true;
+                        MapMethods.PrintMap(map);
+
+                        while (runGame)
                         {
-
-                            // Using static methods to run print the map and move the player around it.
-
-                            Console.CursorVisible = false;
-                            MapMethods.PrintMap(map, playerPositionY, playerPositionX);
-                            
                             MapMethods.HandlePlayerMovement(map, ref playerPositionY, ref playerPositionX);
+                            MapMethods.UpdateMap(map, oldMap);                   
                         }
-
                         break;
+
+
 
                     // Prints instructions to the console.
 
@@ -120,7 +139,7 @@ namespace Console_Warrior
                     case "3":
 
                         Console.Clear();
-                        isRunning = false;
+                        runMenu = false;
                         break;
 
                     // Handles invalid input.
@@ -131,25 +150,9 @@ namespace Console_Warrior
                         Console.WriteLine("Invalid input...");
                         Console.ReadLine();
                         break;
+
                 }
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-     
-            
-
-        }
-      
+            }      
+        }     
     }
 }

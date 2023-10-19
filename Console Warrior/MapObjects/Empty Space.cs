@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Console_Warrior
+namespace Console_Warrior.MapObjects
 {
-    internal class Stone : IMapPrintAble
+    internal class Empty_Space : IMapPrintAble
     {
-
         public string GetSymbol()
         {
-            return "☖";
+            return " ";
         }
     }
 }

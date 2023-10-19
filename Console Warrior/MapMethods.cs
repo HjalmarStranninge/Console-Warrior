@@ -8,71 +8,34 @@ using Console_Warrior;
 using Console_Warrior.NewFolder;
 using Console_Warrior.Characters;
 using Console_Warrior.Items;
+using Console_Warrior.MapObjects;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Console_Warrior
 {
 
+    // Class with different methods related to handling the map which the game is played on.
     internal static class MapMethods
     {
-        // A method for converting the enums into symbols.
-        internal static string ToSymbol(Objects item)
+        
+        // Method for initially printing the map.
+        internal static void PrintMap(IMapPrintAble[,] mapArray) 
         {
-            switch (item)
-            {
-                case Objects.None:
-                    return " ";
-                    
-                case Objects.Player: 
-                    return "웃";
 
-                case Objects.Monster:
-                    return "💀";
-
-                case Objects.Wall:
-                    return "☖";
-
-                default:
-                    return " ";
-            }
-        }
-
-
-        // Method for printing the map. Resets the cursor position to overwrite the old map.
-        internal static void PrintMap(IMapPrintAble[,] mapArray, int playerY, int playerX) 
-        {
             Console.SetCursorPosition(0, 0);
-
-            mapArray[playerY, playerX] = new Hero();
-
-            int oldPositionY = playerY;
-            int oldPositionX = playerX;
 
             int mapHeight = mapArray.GetLength(0);
             int mapWidth = mapArray.GetLength(1);
 
             for (int y = 0; y < mapHeight; y++)
-            {
-                
+            {               
                 for (int x = 0; x < mapWidth; x++)
-                {
-                   
-                    if (y == playerY && x == playerY)
-                    {
-                        Console.Write(mapArray[y, x].GetSymbol());
-                    }
-                    else
-                    {
-                        Console.Write($"{mapArray[y, x].GetSymbol()} ");
-                    }
-
+                {                   
+                    Console.Write(mapArray[y, x].GetSymbol());
                 }
-
                 Console.WriteLine();
-
-            }
-
-            mapArray[oldPositionY, oldPositionX] = new Empty_Space();
-        }
+            }           
+        }     
 
         // Method for printing text slower, letter by letter.
         internal static void SlowText(string text)
@@ -84,6 +47,7 @@ namespace Console_Warrior
             }
 
             Console.WriteLine();
+
         }
 
         // Method handling the players movement on the map. It reads the player input and changes the positional coordinates accordingly,
@@ -92,6 +56,9 @@ namespace Console_Warrior
         public static void HandlePlayerMovement(IMapPrintAble[,] map, ref int playerPositionY, ref int playerPositionX)
         {
             ConsoleKeyInfo keyPressed = Console.ReadKey(intercept: true);
+
+            int oldY = playerPositionY;
+            int oldX = playerPositionX;
 
             if (keyPressed.Key == ConsoleKey.W)
             {
@@ -130,6 +97,32 @@ namespace Console_Warrior
             {
             }
 
+            if (oldY != playerPositionY || oldX != playerPositionX)
+            {
+                map[playerPositionY, playerPositionX] = map[oldY, oldX];
+                map[oldY, oldX] = new Empty_Space();
+            }          
+        }
+
+        // Method for updating map after each movement. It compares the newest instance of the map to the older one
+        // and prints everything that has changed.
+        public static void UpdateMap(IMapPrintAble[,] map, IMapPrintAble[,] oldMap)
+        {
+            int mapHeight = map.GetLength(0);
+            int mapWidth = map.GetLength(1);
+
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    if (map[y,x]  != oldMap[y, x])
+                    {
+                        Console.SetCursorPosition(x, y);
+                        Console.Write(map[y, x].GetSymbol());
+                    }
+                }
+                
+            }
         }
     }
 }

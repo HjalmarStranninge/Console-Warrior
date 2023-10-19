@@ -12,11 +12,13 @@ namespace Console_Warrior.Characters.Monsters
         protected string _name;
         protected int _xpDrop;
         protected string _description;
+        public string Name { get { return _name; } }    
+        public string Description { get { return _description; } }
         public abstract void AttackDescription();
 
         public string GetSymbol()
         {
-            return "💀";
+            return "M";
         }
     }
 }

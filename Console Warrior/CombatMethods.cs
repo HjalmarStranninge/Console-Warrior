@@ -30,10 +30,10 @@ namespace Console_Warrior
 
                 // Displaying the names and healthbars of the player and enemy.
 
-                Console.WriteLine($"{player.Name} (HP: {player.CurrentHP}/{player.MaxHP}");
+                CombatMethods.DisplayPlayerInfo(player);
                 CombatMethods.DrawHealthBar(player.CurrentHP, player.MaxHP);
 
-                Console.WriteLine($"{enemy.Name} (HP: {enemy.CurrentHP}/{enemy.MaxHP}");
+                Console.WriteLine($"{enemy.Name} (HP: {enemy.CurrentHP}/{enemy.MaxHP})");
                 CombatMethods.DrawHealthBar(enemy.CurrentHP, enemy.MaxHP);
 
 
@@ -197,8 +197,8 @@ namespace Console_Warrior
                                 int critAttack = (int)Math.Floor((double)attacker.AttackStat * 1.5);
                                 int remaindingHP = defender.CurrentHP - critAttack;
                                 defender.SetHP(remaindingHP);
-                                MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability and dealing a devastating blow, " +
-                                $"leaving you reeling from the critical hit. You take {critAttack} points of damage.");
+                                MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability " +
+                                $"\nand dealing a devastating blow, leaving you reeling from the critical hit. You take {critAttack} points of damage.");
                             }
 
                             else
@@ -221,9 +221,9 @@ namespace Console_Warrior
                             int critAttack = (int)Math.Floor((double)attacker.AttackStat * 1.5);
                             int remaindingHP = defender.CurrentHP - critAttack;
                             defender.SetHP(remaindingHP);
-                            MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability and dealing a devastating blow, " +
-                                $"leaving you reeling from the critical hit. You take {critAttack} points of damage.");
-                        }
+                            MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability " +
+                            $"\nand dealing a devastating blow, leaving you reeling from the critical hit. You take {critAttack} points of damage.");
+                    }
                         else
                         {
                             int remaindingHP = defender.CurrentHP - attacker.AttackStat;
@@ -265,8 +265,8 @@ namespace Console_Warrior
                         int critAttack = (int)Math.Floor((double)attacker.AttackStat * 1.5);
                         int remaindingHP = defender.CurrentHP - critAttack;
                         defender.SetHP(remaindingHP);
-                        MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability and dealing a devastating blow, " +
-                            $"leaving you reeling from the critical hit. You take {critAttack} points of damage.");
+                        MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability " +
+                                $"\nand dealing a devastating blow, leaving you reeling from the critical hit. You take {critAttack} points of damage.");
                     }
                 }
 
@@ -349,7 +349,9 @@ namespace Console_Warrior
             Console.Write("[");
             for (int i = 0; i < filledLength; i++)
             {
-                Console.Write("#");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("♥");
+                Console.ResetColor();
             }
             for (int i = filledLength; i <barLength; i++)
             {
@@ -402,6 +404,31 @@ namespace Console_Warrior
             {
                 return false;
             }
+        }
+
+        public static void DisplayPlayerInfo(Hero player)
+        {
+            Console.Write($"{player.Name} (HP: ");
+            if(player.CurrentHP < 80)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{player.CurrentHP}/{player.MaxHP}");
+                Console.ResetColor();
+                Console.Write(")");
+            }
+            else if (player.CurrentHP < 20)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write($"{player.CurrentHP}/{player.MaxHP}");
+                Console.ResetColor();
+                Console.Write(")");
+            }
+            else
+            {
+                Console.Write($"{player.CurrentHP}/{player.MaxHP})");
+            }
+            Console.WriteLine();
+                
         }
     }
 }

@@ -127,6 +127,9 @@ namespace Console_Warrior
                         break;
 
                     default:
+                        Console.Clear();
+                        Console.WriteLine("Invalid input. Please press 1-3.");
+                        Thread.Sleep(1000);
                         break;
                 }
             }            
@@ -163,18 +166,48 @@ namespace Console_Warrior
             {                  
 
                     // Checks if the player is blocking.
+
                     if (isBlocking)
                     {
+                        // Rolls for a succesful block. Chance of success increases with a higher defence stat,
+                        // and decreases if the attacker has a high attack stat.
+
                         Console.Clear();
-                        if (attacker.AttackStat > defender.DefenceStat)
-                        {
-                            int remaindingHP = defender.CurrentHP - (attacker.AttackStat - defender.DefenceStat);
-                            defender.SetHP(remaindingHP);
-                            MapMethods.SlowText($"You blocked the attack, taking only {attacker.AttackStat - defender.DefenceStat} points of damage!");
-                        }
-                        else
+                        var random = new Random();
+                        int randomRoll = random.Next(1, 101);
+                        int blockProbability = (int)((defender.DefenceStat / (float)(defender.DefenceStat + attacker.AttackStat))*100);
+                        if (randomRoll <= blockProbability)
                         {
                             MapMethods.SlowText($"You blocked the attack!");
+                        }
+
+                        // If the block fails, the player takes damage as usual.
+                        else
+                        {
+                            
+                            MapMethods.SlowText($"Your attempt to block the incoming attack falls short as your adversary outwits your defenses. " +
+                            $"\nThe impact is jarring, and you find yourself absorbing the full force of the strike.");
+                            Thread.Sleep(500);
+
+                            // Checks for crit.
+
+                            if (CombatMethods.CriticalHit(attacker))
+                            {
+                                Console.Clear();
+                                int critAttack = (int)Math.Floor((double)attacker.AttackStat * 1.5);
+                                int remaindingHP = defender.CurrentHP - critAttack;
+                                defender.SetHP(remaindingHP);
+                                MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability and dealing a devastating blow, " +
+                                $"leaving you reeling from the critical hit. You take {critAttack} points of damage.");
+                            }
+
+                            else
+                            {
+                                Console.Clear();
+                                int remaindingHP = defender.CurrentHP - attacker.AttackStat;
+                                defender.SetHP(remaindingHP);
+                                MapMethods.SlowText($"You take {attacker.AttackStat} points of damage!");
+                            }
                         }                       
                     }
 
@@ -196,10 +229,10 @@ namespace Console_Warrior
                             int remaindingHP = defender.CurrentHP - attacker.AttackStat;
                             defender.SetHP(remaindingHP);
                             MapMethods.SlowText($"You take {attacker.AttackStat} points of damage!");
-                        }                      
-                                      
+                        }                                                            
                     }
             }
+
             else
             {
                 Console.Clear();

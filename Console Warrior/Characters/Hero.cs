@@ -17,7 +17,7 @@ namespace Console_Warrior.NewFolder
 
             _maxHP = 100;
             _attack = 15;
-            _defence = 10;
+            _defence = 20;
             _currentHP = _maxHP;
         }
 

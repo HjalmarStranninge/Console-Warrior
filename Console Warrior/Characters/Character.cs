@@ -16,7 +16,7 @@ namespace Console_Warrior.NewFolder
         protected int _defence;
         protected string _name;
         protected int _currentHP;
-        protected int _critChance = 10;
+        protected int _critChance = 8;
         public string Name { get { return _name; } }
         public int MaxHP { get { return _maxHP; } }
         public int AttackStat { get { return _attack; } }

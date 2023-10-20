@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Console_Warrior
 {
+
+    // This class will store all the methods related to the combat system.
     internal static class CombatMethods
     {
         // Method for displaying the combat interface and handling gameplay.
@@ -21,16 +23,21 @@ namespace Console_Warrior
             MapMethods.SlowText(enemy.Description);
             Thread.Sleep(1000);
 
+            // While-loop that keeps running the combat until one of the combatants loses all their health.
             while (player.CurrentHP > 0 && enemy.CurrentHP > 0) 
             {
                 Console.Clear();
 
+                // Displaying the names and healthbars of the player and enemy.
+
                 Console.WriteLine($"{player.Name} (HP: {player.CurrentHP}/{player.MaxHP}");
                 CombatMethods.DrawHealthBar(player.CurrentHP, player.MaxHP);
 
-
                 Console.WriteLine($"{enemy.Name} (HP: {enemy.CurrentHP}/{enemy.MaxHP}");
                 CombatMethods.DrawHealthBar(enemy.CurrentHP, enemy.MaxHP);
+
+
+                // Simple menu where the player can choose different actions.
 
                 Console.WriteLine("[1]: Attack");
                 Console.WriteLine("[2]: Block");
@@ -44,28 +51,79 @@ namespace Console_Warrior
                 string userInput = Console.ReadLine();
                 Console.CursorVisible = false;
 
+                // Switch case for handling the different combat mechanics. No matter what the player does, the enemy will attack.
+
                 switch (userInput)
                 {
+
+                    // Attack.
                     case "1":
 
-                        CombatMethods.Attack(player, enemy);
-                        CombatMethods.CheckForDeath(player, enemy);
+                        // A random variable is used to simulate a diceroll. Highest roll gets to attack first.
+                        var random = new Random();
+                        int playerRoll = random.Next(1, 13);
+                        int enemyRoll = random.Next(1, 13);
 
-                        CombatMethods.Attack(enemy, player);
-                        CombatMethods.CheckForDeath(player, enemy);
+                        if(playerRoll > enemyRoll)
+                        {
+                            CombatMethods.Attack(player, enemy);
+                            if (enemy.CurrentHP <= 0)
+                            {
+                                CombatMethods.Death(player, enemy);
+                                break;
+                            }
+
+                            CombatMethods.Attack(enemy, player);
+                            if (player.CurrentHP <= 0)
+                            {
+                                CombatMethods.Death(player, enemy);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            CombatMethods.Attack(enemy, player);
+                            if (player.CurrentHP <= 0)
+                            {
+                                CombatMethods.Death(player, enemy);
+                                break;
+                            }
+
+                            CombatMethods.Attack(player, enemy);
+                            if (enemy.CurrentHP <= 0)
+                            {
+                                CombatMethods.Death(player, enemy);
+                                break;
+                            }
+                        }
+                        
 
                         break;
 
+                    // Block.
                     case "2":
 
-                        CombatMethods.Attack(enemy, player);
-                        CombatMethods.CheckForDeath(player, enemy);
+                        // Blocking is always prioritized so no roll is needed here.
+
+                        CombatMethods.Attack(enemy, player, CombatMethods.IsBlocking());
+                        if (player.CurrentHP <= 0)
+                        {
+                            CombatMethods.Death(player, enemy);
+                            break;
+                        }
+
                         break;
 
+                    // Use item.
                     case "3":
 
                         CombatMethods.Attack(enemy, player);
-                        CombatMethods.CheckForDeath(player, enemy);
+                        if (player.CurrentHP <= 0)
+                        {
+                            CombatMethods.Death(player, enemy);
+                            break;
+                        }
+
                         break;
 
                     default:
@@ -75,7 +133,7 @@ namespace Console_Warrior
         }
 
         // Checks if either combatant has lost all their HP and triggers and appropriate response.
-        public static void CheckForDeath(Hero player, Monster enemy)
+        public static void Death(Hero player, Monster enemy)
         {
 
             if (player.CurrentHP <= 0)
@@ -96,28 +154,115 @@ namespace Console_Warrior
             }            
         }
 
+        // Calculates damage based on attack and defence and subtracts it from defenders HP. Checks for block.
+        public static void Attack(Character attacker, Character defender, bool isBlocking)
+        {
+            Console.Clear();
+            attacker.AttackDescription();
+            if (CombatMethods.AttackHit())
+            {                  
+
+                    // Checks if the player is blocking.
+                    if (isBlocking)
+                    {
+                        Console.Clear();
+                        if (attacker.AttackStat > defender.DefenceStat)
+                        {
+                            int remaindingHP = defender.CurrentHP - (attacker.AttackStat - defender.DefenceStat);
+                            defender.SetHP(remaindingHP);
+                            MapMethods.SlowText($"You blocked the attack, taking only {attacker.AttackStat - defender.DefenceStat} points of damage!");
+                        }
+                        else
+                        {
+                            MapMethods.SlowText($"You blocked the attack!");
+                        }                       
+                    }
+
+                    else
+                    {
+
+                        // Checks for crit.
+
+                        if (CombatMethods.CriticalHit(attacker))
+                        {
+                            int critAttack = (int)Math.Floor((double)attacker.AttackStat * 1.5);
+                            int remaindingHP = defender.CurrentHP - critAttack;
+                            defender.SetHP(remaindingHP);
+                            MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability and dealing a devastating blow, " +
+                                $"leaving you reeling from the critical hit. You take {critAttack} points of damage.");
+                        }
+                        else
+                        {
+                            int remaindingHP = defender.CurrentHP - attacker.AttackStat;
+                            defender.SetHP(remaindingHP);
+                            MapMethods.SlowText($"You take {attacker.AttackStat} points of damage!");
+                        }                      
+                                      
+                    }
+            }
+            else
+            {
+                Console.Clear();
+                MapMethods.SlowText("But the attack missed!");
+            }          
+            Thread.Sleep(1000);           
+        }
+
+
+        // Override of Attack(). This one doesnt check for block.
         public static void Attack(Character attacker, Character defender)
         {
             Console.Clear();
             attacker.AttackDescription();
-            int attackPower = attacker.AttackStat - defender.DefenceStat;
-            int remaindingHP = defender.CurrentHP - attackPower;
-            defender.SetHP(remaindingHP);
-
-            if (attacker is Hero)
+            if (CombatMethods.AttackHit())
             {
-                MapMethods.SlowText($"The {defender.Name} takes {attackPower} points of damage!");
+                // Checks for crit.
+                if (CombatMethods.CriticalHit(attacker))
+                {
+                    if (attacker is Hero)
+                    {
+                        int critAttack = (int)Math.Floor((double)attacker.AttackStat * 1.5);
+                        int remaindingHP = defender.CurrentHP - critAttack;
+                        defender.SetHP(remaindingHP);
+                        MapMethods.SlowText($"Your attack lands with surgical precision, dealing devastating damage as it finds the enemy's vulnerable spot." +
+                            $"\nThe {defender.Name} takes {critAttack} points of damage!");
+                    }
+                    else
+                    {
+                        int critAttack = (int)Math.Floor((double)attacker.AttackStat * 1.5);
+                        int remaindingHP = defender.CurrentHP - critAttack;
+                        defender.SetHP(remaindingHP);
+                        MapMethods.SlowText($"Caught off guard, the enemy's attack lands with brutal force, finding your vulnerability and dealing a devastating blow, " +
+                            $"leaving you reeling from the critical hit. You take {critAttack} points of damage.");
+                    }
+                }
+
+                // If no crit.
+                else
+                {
+                    if (attacker is Hero)
+                    {
+                        MapMethods.SlowText($"The {defender.Name} takes {attacker.AttackStat} points of damage!");
+                        int remaindingHP = defender.CurrentHP - attacker.AttackStat;
+                        defender.SetHP(remaindingHP);
+                    }
+                    else
+                    {
+                        int remaindingHP = defender.CurrentHP - attacker.AttackStat;
+                        defender.SetHP(remaindingHP);
+                        MapMethods.SlowText($"You take {attacker.AttackStat} points of damage!");
+                    }
+                }               
             }
+
+            // Attack missed.
+
             else
             {
-                MapMethods.SlowText($"You take {attackPower} points of damage!");
+                Console.Clear();
+                MapMethods.SlowText("But the attack missed!");
             }
-
-
-            
             Thread.Sleep(1000);
-            
-
         }
 
 
@@ -163,9 +308,10 @@ namespace Console_Warrior
 
         }
 
+        // Draws a visual health bar.
         public static void DrawHealthBar(int currentHealth, int maxHealth)
         {
-            int barLength = 20;
+            int barLength = 25;
             int filledLength = (int)Math.Floor((double)currentHealth / maxHealth * barLength);
             Console.Write("[");
             for (int i = 0; i < filledLength; i++)
@@ -180,6 +326,49 @@ namespace Console_Warrior
             Console.WriteLine();
             Console.WriteLine();
 
+        }
+
+        // Rolls for accuracy.
+        public static bool AttackHit()
+        {
+            var random = new Random();
+            int accuracyRoll = random.Next(1, 101);
+            if (accuracyRoll > 10)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // For blocking mechanic.
+        public static bool IsBlocking()
+        {
+            Console.Clear();
+            MapMethods.SlowText("Focused and determined, you ready your defenses, adopting a protective stance.");
+            Thread.Sleep(500);
+            return true;
+        }
+
+        public static void CounterAttack()
+        {
+
+        }
+
+        public static bool CriticalHit(Character attacker)
+        {
+            var random = new Random();
+            int critRoll = random.Next(1, 101);
+            if (critRoll <= attacker.CritChance)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

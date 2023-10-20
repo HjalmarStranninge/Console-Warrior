@@ -7,6 +7,7 @@ using Console_Warrior.NewFolder;
 
 namespace Console_Warrior.Characters.Monsters
 {
+    // This class defines the monsters that the player can encounter. Each new monster type will be a subclass of this one.
     internal abstract class Monster : Character, IMapPrintAble
     {
         
@@ -25,8 +26,6 @@ namespace Console_Warrior.Characters.Monsters
                 return _deathDescriptions[randomIdex];
             } 
         }
-
-       
 
         public string GetSymbol()
         {

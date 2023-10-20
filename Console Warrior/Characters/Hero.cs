@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace Console_Warrior.NewFolder
 {
+    // The playable class.
     internal class Hero : Character, IMapPrintAble
     {
         
@@ -15,12 +16,12 @@ namespace Console_Warrior.NewFolder
         {
 
             _maxHP = 100;
-            _attack = 20;
-            _defence = 0;
+            _attack = 15;
+            _defence = 10;
             _currentHP = _maxHP;
         }
 
-        
+        // Method for handling experience gain.
         public void GainXP(int xpGain, Hero player)
         {
             Console.Clear();
@@ -49,11 +50,13 @@ namespace Console_Warrior.NewFolder
             Console.ReadLine();
         }
 
+        // Sets the name.
         public void SetName(string name)
         {
             _name = name;
         }
 
+        // Increases level.
         public void LevelUp()
         {
             _level++;
@@ -67,6 +70,7 @@ namespace Console_Warrior.NewFolder
             return "P";
         }
 
+        // There are a couple different attack descriptions to create variation.
         public override void AttackDescription()
         {
             var attackDescriptions = new string[]
@@ -80,5 +84,7 @@ namespace Console_Warrior.NewFolder
             int randomIndex  = Random.Next(attackDescriptions.Length);
             MapMethods.SlowText(attackDescriptions[randomIndex]);
         }
+
+        
     }
 }

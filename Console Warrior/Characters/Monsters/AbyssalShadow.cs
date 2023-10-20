@@ -14,7 +14,7 @@ namespace Console_Warrior.Characters.Monsters
             _level = 1;
             _maxHP = 25;
             _currentHP = _maxHP;
-            _attack = 15;
+            _attack = 20;
             _defence = 0;
             _xpDrop = 20;
             _description = $"A nightmarish entity emerges from the inky blackness of the labyrinth's depths, " +
@@ -26,17 +26,17 @@ namespace Console_Warrior.Characters.Monsters
                "A fading whisper of the supernatural heralds its final act, as it fades away into the abyss.",
 
                "With a sibilant sigh, the Abyssal Shadow ebbs away, its dark presence waning until only a spectral echo remains, " +
-               "dissolving into the void.",
+               "\ndissolving into the void.",
 
                "The Abyssal Shadow yields to the inexorable pull of the void. Its formidable presence crumbles into spectral wisps, " +
-               "surrendering to the unseen forces of the abyss.",
+               "\nsurrendering to the unseen forces of the abyss.",
 
                "Like dissipating smoke, the Abyssal Shadow scatters into nothingness, relinquishing its grip on the world to " +
                "\nbecome but a memory, " +
                "slowly fading into obscurity.",
 
-               "The Abyssal Shadow's spectral form ebbs away, its once-menacing silhouette giving way to an ethereal resonance before " +
-               "\nvanishing, " +
+               "The Abyssal Shadow's spectral form ebbs away, its once-menacing silhouette giving way to an ethereal resonance " +
+               "\nbefore vanishing, " +
                "leaving only a lingering spectral echo."
             };
 

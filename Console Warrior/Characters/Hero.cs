@@ -3,21 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Console_Warrior.NewFolder
 {
     internal class Hero : Character, IMapPrintAble
     {
-        private string _name;
-        public string Name { get { return _name; } }
+        
         private int _xp = 0;
         public Hero()
         {
 
-            _hp = 100;
-            _attack = 10;
+            _maxHP = 100;
+            _attack = 20;
             _defence = 0;
+            _currentHP = _maxHP;
         }
+
+        
+        public void GainXP(int xpGain, Hero player)
+        {
+            Console.Clear();
+            MapMethods.SlowText($"You gained {xpGain} XP!");
+            _xp = _xp + xpGain;
+
+            if (_xp >= 100)
+            {
+                player.LevelUp();
+            }
+        }
+
 
         public void GetCharacterInfo()
         {
@@ -25,7 +40,7 @@ namespace Console_Warrior.NewFolder
             Console.WriteLine($"\t{_name}");
             Console.WriteLine($"Level {_level} Hero");
             Console.WriteLine($"XP until next level: {_xp}/100");
-            Console.WriteLine($"HP: {_hp}/100");
+            Console.WriteLine($"HP: {CurrentHP}/100");
             Console.WriteLine($"Attack: {_attack}");
             Console.WriteLine($"Defence: {_defence}");
             Console.WriteLine();
@@ -42,11 +57,28 @@ namespace Console_Warrior.NewFolder
         public void LevelUp()
         {
             _level++;
+            Console.Clear();
+            MapMethods.SlowText($"DING! You leveled up to lvl.{_level}!");
+           
         }
 
         string IMapPrintAble.GetSymbol()
         {
             return "P";
+        }
+
+        public override void AttackDescription()
+        {
+            var attackDescriptions = new string[]
+            {
+                "You summon all your strength, delivering a mighty swing that cuts through the air with a resounding whoosh.",
+                "With unwavering determination, you ready your weapon, launching into a swift, precise strike.",
+                "Gathering energy, you strike with a thunderous impact, shaking the ground beneath you. "
+            };
+
+            var Random = new Random();
+            int randomIndex  = Random.Next(attackDescriptions.Length);
+            MapMethods.SlowText(attackDescriptions[randomIndex]);
         }
     }
 }

@@ -15,6 +15,8 @@ namespace Console_Warrior
             // Setting text code to ASCII.
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+            // Hiding the cursor. I will only have it visible whenever the player needs to input something.
+            Console.CursorVisible = false;
 
             // Printing a simple menu using a switch case.
             bool runMenu = true;
@@ -28,9 +30,12 @@ namespace Console_Warrior
                 Console.WriteLine("[2]: Instructions");
                 Console.WriteLine("[3]: Exit");
                 Console.WriteLine();
+                Console.CursorVisible = true;
                 Console.Write("Enter your choice: ");
-             
+                
+
                 string userInput = Console.ReadLine();
+                Console.CursorVisible = false;
                 switch (userInput)
                 {
 
@@ -44,7 +49,9 @@ namespace Console_Warrior
                         var player = new Hero();
                         //StoryText.Intro();
 
+                        Console.CursorVisible = true;
                         player.SetName(Console.ReadLine());
+                        Console.CursorVisible = false;
                         //StoryText.Intro(player.Name);
 
                         // Creating 2 int variables for storing the map size, and using them in a 2d array that will become the game map.
@@ -116,17 +123,30 @@ namespace Console_Warrior
 
                         
                         bool runGame = true;
-                        MapMethods.PrintMap(map);
+                        
 
                         while (runGame)
                         {
-                            Console.CursorVisible = false;
+                            MapMethods.PrintMap(map);
+                            
                             MapMethods.HandlePlayerMovement(map, ref playerPositionY, ref playerPositionX);
                             MapMethods.UpdateMap(map, oldMap);
-                            if (MapMethods.IsPlayerOnMonster( playerPositionY, playerPositionX, monsterPositions))
+
+                            // Creating a copy of the monsterPositions-list to iterate through.
+                            // Triggers combat if player is on the same coordinates as a monster, and removes the monster from that position.
+
+                            foreach(var monsterPos in monsterPositions.ToList())
                             {
-                                CombatMethods.RunCombat(player, new Abyssal_Shadow()); 
-                            }
+                                int monsterY = monsterPos.Item1;
+                                int monsterX = monsterPos.Item2;
+
+                                if (playerPositionY == monsterY && playerPositionX == monsterX)
+                                {
+                                    monsterPositions.Remove(monsterPos);
+                                    CombatMethods.RunCombat(player, new Abyssal_Shadow());
+                                    MapMethods.UpdateMap(map, oldMap);
+                                }
+                            }                     
                         }
                         break;
 

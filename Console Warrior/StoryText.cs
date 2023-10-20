@@ -11,6 +11,7 @@ namespace Console_Warrior
     // so that the main code doesn't get cluttered with massive walls of text.
     internal static class StoryText
     {
+        
         public static void Intro()
         {
             Console.Clear();
@@ -60,6 +61,30 @@ namespace Console_Warrior
 
             Console.Write("Press ENTER to continue...");
             Console.ReadLine();
+        }
+
+        public static void DeathDescription()
+        {
+            string[] deathDescriptions = new string[]
+            {
+                "As your vision blurs and your strength wanes, the world around you dissolves into an abyss of unfathomable darkness. " +
+                "\nYou realize that your valiant journey has reached an untimely end...",
+
+                "With a final gasp and a sense of impending doom, your surroundings blur and crumble into an endless void, " +
+                "\nleaving you to grapple with the sudden, profound stillness that follows. " +
+                "\nYour epic quest has met an unfortunate conclusion...",
+
+                "As your life force dwindles to a mere ember, the very fabric of the world unravels, casting you into an unending abyss. " +
+                "\nThe memories of your grand adventure are overshadowed by the inexorable and chilling grasp of oblivion...",
+
+                "In your dying moments, the reality you once knew succumbs to darkness, leaving you in eerie solitude. " +
+                "\nYour remarkable journey becomes a fading dream, soon to be forgotten in the ever-expanding tapestry of existence..."
+            };
+
+            var random = new Random();
+            int randomIndex = random.Next(deathDescriptions.Length);
+
+            MapMethods.SlowText(deathDescriptions[randomIndex]);
         }
 
     }

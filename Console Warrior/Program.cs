@@ -47,12 +47,12 @@ namespace Console_Warrior
                         // Creating a new 'Hero' and using my 'StoryText' - methods to print the story intro.
 
                         var player = new Hero();
-                        //StoryText.Intro();
+                        StoryText.Intro();
 
                         Console.CursorVisible = true;
                         player.SetName(Console.ReadLine());
                         Console.CursorVisible = false;
-                        //StoryText.Intro(player.Name);
+                        StoryText.Intro(player.Name);
 
                         // Creating 2 int variables for storing the map size, and using them in a 2d array that will become the game map.
 

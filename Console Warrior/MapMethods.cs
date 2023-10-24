@@ -43,7 +43,7 @@ namespace Console_Warrior
             foreach (char c in text)
             {
                 Console.Write(c);
-                Thread.Sleep(50);
+                Thread.Sleep(40);
             }
 
             Console.WriteLine();
